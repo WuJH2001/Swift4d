@@ -336,7 +336,7 @@ def scene_reconstruction(dataset, opt, hyper, pipe, testing_iterations, saving_i
             if iteration < final_iter:
                 gaussians.optimizer.step()
                 gaussians.optimizer.zero_grad(set_to_none = True)
-                gaussians.hash_optimizer.step()
+                gaussians.hash_optimizer.step()  # It is only updated during the fine stage.
                 gaussians.hash_optimizer.zero_grad(set_to_none = True)
 
 
