@@ -84,13 +84,11 @@ def center_poses(poses, blender2opencv):
     poses_centered = poses_centered[:, :3]  # (N_images, 3, 4)
 
     return poses_centered, pose_avg_homo
-
 root_dir = sys.argv[1]
-
 colmap_dir = os.path.join(root_dir,"sparse_")
 if not os.path.exists(colmap_dir):
     os.makedirs(colmap_dir)
-poses_arr = np.load(os.path.join(root_dir, "poses_bounds.npy"))  
+poses_arr = np.load(os.path.join(root_dir, "poses_bounds.npy"))
 poses = poses_arr[:, :-2].reshape([-1, 3, 5])  # (N_cams, 3, 5)
 near_fars = poses_arr[:, -2:]
 videos = glob.glob(os.path.join(root_dir, "cam[0-9][0-9]"))
@@ -100,12 +98,11 @@ H, W, focal = poses[0, :, -1]
 focal = focal/2
 focal = [focal, focal]
 poses = np.concatenate([poses[..., 1:2], -poses[..., :1], poses[..., 2:4]], -1)
-
 videos = glob.glob(os.path.join(root_dir, "cam[0-9][0-9]"))
 videos = sorted(videos)
 image_paths = []
 for index, video_path in enumerate(videos):
-    image_path = os.path.join(video_path,"images","{:%04d}.png".format(0))
+    image_path = os.path.join(video_path,"images","0000.png")
     image_paths.append(image_path)
 print(image_paths)
 goal_dir = os.path.join(root_dir,"image_colmap")
@@ -124,8 +121,6 @@ for index, image in enumerate(image_paths):
     shutil.copy(image,goal_path)
 
 print(poses)
-# breakpoint()
-
 # write image information.
 object_images_file = open(os.path.join(colmap_dir,"images.txt"),"w")
 for idx, pose in enumerate(poses):
@@ -139,15 +134,12 @@ for idx, pose in enumerate(poses):
     R = np.linalg.inv(R)
     T = -np.matmul(R,T)
     T = [str(i) for i in T]
-    # T = ["%.3f"%i for i in pose[:3,3]]
     qevc = [str(i) for i in rotmat2qvec(R)]
-    # breakpoint()
     print(idx+1," ".join(qevc)," ".join(T),1,image_name_list[idx],"\n",file=object_images_file)
-# breakpoint()
 
 # write camera infomation.
 object_cameras_file = open(os.path.join(colmap_dir,"cameras.txt"),"w")
-print(1,"SIMPLE_PINHOLE",1352,1014,focal[0],1352/2,1014/2,file=object_cameras_file)
+print(1,"SIMPLE_PINHOLE",1352,1014,focal[0],1352/2,1014/2,file=object_cameras_file) # 
 object_point_file = open(os.path.join(colmap_dir,"points3D.txt"),"w")
 
 object_cameras_file.close()
