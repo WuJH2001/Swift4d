@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 import sys
-sys.path.append('./scene')
-from neural_3D_dataset_NDC import Neural3D_NDC_Dataset
+# sys.path.append('./scene')
+from scripts.neural_3D_dataset_NDC import Neural3D_NDC_Dataset
 # import scene
 # from scene.neural_3D_dataset_NDC import Neural3D_NDC_Dataset
 
