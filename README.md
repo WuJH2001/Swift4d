@@ -23,7 +23,7 @@ pip install  submodules/simple-knn
 
 ## Data Preparation
 
-**For real dynamic scenes:**
+### 1. For N3DV dynamic scenes:
 
 [Plenoptic Dataset](https://github.com/facebookresearch/Neural_3D_Video) could be downloaded from their official websites. To save the memory, you should extract the frames of each video and then organize your dataset as follows.
 
@@ -45,9 +45,10 @@ pip install  submodules/simple-knn
 │     ├── cut_roasted_beef
 |     ├── ...
 ```
-**For other Multi-view dynamic scenes (e.g. MeetRoom, VRU dataset):**
+### 2. For other multi-view dynamic scenes (e.g., MeetRoom, VRU dataset):
 
-You may need to follow [3DGSTream](https://github.com/SJoJoK/3DGStream)
+Please follow the step-by-step instructions in [this script](scripts/multiview_data_process) to process your data.
+
 
 
 
