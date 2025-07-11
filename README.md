@@ -45,7 +45,7 @@ pip install  submodules/simple-knn
 │     ├── cut_roasted_beef
 |     ├── ...
 ```
-**For your Multi-view dynamic scenes:**
+**For other Multi-view dynamic scenes (e.g. MeetRoom, VRU dataset):**
 
 You may need to follow [3DGSTream](https://github.com/SJoJoK/3DGStream)
 
