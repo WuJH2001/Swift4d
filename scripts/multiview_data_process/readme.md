@@ -1,6 +1,6 @@
 
 
-The scene requires undistortion processing using the provided camera parameters, undistortion parameters, and scripts for frame 0. The parameters are stored in the `dataprocess` folder. Use the script to copy parameters to other frames and call COLMAP for undistortion. The steps are as follows:
+The scene requires undistortion processing using the provided camera parameters, undistortion parameters, and scripts for frame 0. Use the script to copy parameters to other frames and call COLMAP for undistortion. The steps are as follows:
 
 1. Convert the multi-view video (.mp4) into images (.png). Make sure to modify the video path (line 34) and the number of viewpoints (line 32):
 
