@@ -44,7 +44,7 @@ for id in range(1,args.last_frame_id+1):
         --image_path " + args.source_path + inputDir + " \
         --input_path " + args.source_path + "/distorted/sparse/0 \
         --output_path " + args.source_path + inputDir + " \
-        --output_type COLMAP" + "--min_scale 1 --max_scale 1"      )  #  --min_scale 1 --max_scale 1        
+        --output_type COLMAP " + "--min_scale 1 --max_scale 1"      )  #  --min_scale 1 --max_scale 1        
     exit_code = os.system(img_undist_cmd)
     if exit_code != 0:
         logging.error(f"Mapper failed with code {exit_code}. Exiting.")
