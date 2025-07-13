@@ -97,7 +97,7 @@ If you find our  VRU Basketball dataset or code helpful, we’d greatly apprecia
 ---
 
 ## Citation
-
+If you find our code useful, we would greatly appreciate it if you could give us a star and cite our work.
 
 ```
 @inproceedings{wuswift4d,
