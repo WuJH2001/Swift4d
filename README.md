@@ -47,7 +47,7 @@ pip install  submodules/simple-knn
 ```
 ### 2. For other multi-view dynamic scenes (e.g., MeetRoom, VRU dataset):
 
-Please follow the step-by-step instructions in [this script](scripts/multiview_data_process) to process your data.
+Please follow the step-by-step instructions in [this script](scripts/multiview_data_process) to process your data. The MeetRoom  processed camera pose in [here](https://1drv.ms/f/c/80737028a7921b70/EqXgyFgTWQBFgEZrTZK_3TwB9607YkS6VYrNP2ijADCK8Q?e=PBg8wf)
 
 
 
