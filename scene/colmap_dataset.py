@@ -224,7 +224,7 @@ class Colmap_Dataset(Dataset):
         self.focal = []
         self.cameras = len(self.split)
         self.first_frame = 0
-        self.final_frame = 10
+        self.final_frame = 300
 
         for idx, key in enumerate(cam_extrinsics):
             sys.stdout.write('\r')
