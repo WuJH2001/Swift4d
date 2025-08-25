@@ -50,6 +50,8 @@ pip install  submodules/simple-knn
 Please follow the step-by-step instructions in [this script](scripts/multiview_data_process) to process your data.  The processed camera poses for MeetRoom are available [here](https://1drv.ms/f/c/80737028a7921b70/EneGBEJSEEdFtnisrn8rP40BYMxn0sSR8m7fsgRoahCAhg?e=C7SVar). 
 If you use the camera parameters we provided, you can skip steps 1 and 2 and go directly to step 3.
 
+If you want to train the model on multi-view dataset, you may need to modify this [code](https://github.com/WuJH2001/swift4d/blob/main/scene/colmap_dataset.py#L228).  For the small-motion dataset **MeetRoom**, you can train 300 frames at once, so simply set the first frame and final frame to 0 and 300, respectively.
+In contrast, for the large-motion dataset **VRU**, you can only train 20 frames at a time, so you need to set them as 0–20, 20–40, and so on.
 
 
 
