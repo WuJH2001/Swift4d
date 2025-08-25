@@ -223,6 +223,8 @@ class Colmap_Dataset(Dataset):
         self.transform = Trans.ToTensor()
         self.focal = []
         self.cameras = len(self.split)
+        # If you are training a scene from the MeetRoom dataset, the following settings are sufficient. 
+        #If you are training with the VRU dataset, you need to train the model every 20 frames, and you can divide the frames into segments such as 0–20, 20–40, and so on.
         self.first_frame = 0
         self.final_frame = 300
 
