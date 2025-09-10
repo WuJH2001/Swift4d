@@ -8,7 +8,7 @@ The scene requires undistortion processing using the provided camera parameters,
    python video2stream.py
    ```
 
-2. Next, you need to perform undistortion on **frame 0**:
+2. Next, perform undistortion and camera calibration for **frame 0**.
 
    ```bash
    python convert.py -s /amax/dataset/VRU_gz/frame000000
