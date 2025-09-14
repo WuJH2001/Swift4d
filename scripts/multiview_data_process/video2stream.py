@@ -30,8 +30,8 @@ def extract_frames_to_folders(video_path, base_folder, video_label):
 
 
 for i in range(0,34):  # Total videos you want to process
-    frame_id = f'{i:02d}'
-    video_filename = os.path.join("vru", frame_id+".mp4")  # Maybe you need to modify the file input path to match your data.
+    video_id = f'{i:02d}'
+    video_filename = os.path.join("vru", video_id+".mp4")  # Maybe you need to modify the file input path to match your data.
     base_folder = "vru"+ "/frame"
     video_label = f"cam{i:02d}"
     extract_frames_to_folders(video_filename, base_folder, video_label)
