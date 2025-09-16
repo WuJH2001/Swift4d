@@ -10,8 +10,8 @@
 Please follow the [3D-GS](https://github.com/graphdeco-inria/gaussian-splatting) to install the relative packages.
 
 ```bash
-git clone --recursive https://github.com/WuJH2001/swift4d.git
-cd swift4d
+git clone --recursive https://github.com/WuJH2001/Swift4d.git
+cd Swift4d
 conda create -n swift4d python=3.8
 conda activate swift4d
 
