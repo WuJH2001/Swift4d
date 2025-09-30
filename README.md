@@ -103,9 +103,10 @@ If you find our  VRU Basketball dataset or code helpful, we’d greatly apprecia
 If you find our code useful, we would greatly appreciate it if you could give us a star and cite our work.
 
 ```
-@inproceedings{wuswift4d,
+@article{wu2025swift4d,
   title={Swift4D: Adaptive divide-and-conquer Gaussian Splatting for compact and efficient reconstruction of dynamic scene},
   author={Wu, Jiahao and Peng, Rui and Wang, Zhiyan and Xiao, Lu and Tang, Luyang and Yan, Jinbo and Xiong, Kaiqiang and Wang, Ronggang},
-  booktitle={The Thirteenth International Conference on Learning Representations}
+  journal={arXiv preprint arXiv:2503.12307},
+  year={2025}
 }
 ```
