@@ -168,7 +168,7 @@ def readColmapSceneInfo(path, images, eval, llffhold=8):
 
     from scene.colmap_dataset import Colmap_Dataset
 
-    test_num = [0,10,20,30]
+    test_num = [0]
 
     train_num = [i for i in range(len(cam_extrinsics)) if i not in test_num]
     train_exr = [cam_extrinsics[i] for i in range(len(cam_extrinsics)) if i not in test_num] 
