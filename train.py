@@ -181,9 +181,6 @@ def scene_reconstruction(dataset, opt, hyper, pipe, testing_iterations, saving_i
 
         # Pick a random Camera
 
-        if iteration == 3000:
-            print("123")
-            pass
         # dynerf's branch
         if opt.dataloader and not load_in_memory:
             try:
@@ -242,8 +239,7 @@ def scene_reconstruction(dataset, opt, hyper, pipe, testing_iterations, saving_i
         visibility_filter = torch.cat(visibility_filter_list).any(dim=0)
         image_tensor = torch.cat(images,0)
         gt_image_tensor = torch.cat(gt_images,0)
-        # Loss
-        # breakpoint()
+
         Ll1 = l1_loss(image_tensor, gt_image_tensor[:,:3,:,:]) * (1.0 - opt.lambda_dssim)
 
         psnr_ = psnr(image_tensor, gt_image_tensor).mean().double()
