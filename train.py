@@ -256,9 +256,13 @@ def scene_reconstruction(dataset, opt, hyper, pipe, testing_iterations, saving_i
 
         
         loss.backward()
-        if torch.isnan(loss).any():
-            print("loss is nan,end training, reexecv program now.")
-            os.execv(sys.executable, [sys.executable] + sys.argv)
+        for param in gaussians._FDhash.parameters(): 
+            if param.grad is not None: 
+                if torch.isnan(param.grad).any():
+                    pass
+                param.grad.nan_to_num_()     
+                torch.clamp_(param.grad, -1000, 1000)
+   
         viewspace_point_tensor_grad = torch.zeros_like(viewspace_point_tensor)
         for idx in range(0, len(viewspace_point_tensor_list)):
             viewspace_point_tensor_grad = viewspace_point_tensor_grad + viewspace_point_tensor_list[idx].grad
