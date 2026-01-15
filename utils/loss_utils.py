@@ -66,12 +66,12 @@ def _ssim(img1, img2, window, window_size, channel, size_average=True):
         return ssim_map.mean(1).mean(1).mean(1)
 
 
-import torch
-from torch import nn
-from torchmetrics import MultiScaleStructuralSimilarityIndexMeasure
-ms_ssim = MultiScaleStructuralSimilarityIndexMeasure(data_range=1.0).cuda()
+# import torch
+# from torch import nn
+# from torchmetrics import MultiScaleStructuralSimilarityIndexMeasure
+# ms_ssim = MultiScaleStructuralSimilarityIndexMeasure(data_range=1.0).cuda()
 
-def msssim(rgb, gts):
-    # assert (rgb.max() <= 1.05 and rgb.min() >= -0.05)
-    # assert (gts.max() <= 1.05 and gts.min() >= -0.05)
-    return ms_ssim(rgb, gts)
+# def msssim(rgb, gts):
+#     # assert (rgb.max() <= 1.05 and rgb.min() >= -0.05)
+#     # assert (gts.max() <= 1.05 and gts.min() >= -0.05)
+#     return ms_ssim(rgb, gts)
