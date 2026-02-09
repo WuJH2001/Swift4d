@@ -1,6 +1,6 @@
 # Swift4D: Adaptive divide-and-conquer Gaussian Splatting for compact and efficient reconstruction of dynamic scene
 [Jiahao Wu](https://wujh2001.github.io/) , [Rui Peng](https://prstrive.github.io/) , Zhiyan Wang, Lu Xiao, </br> Luyang Tang, Kaiqiang Xiong, [Ronggang Wang](https://www.ece.pku.edu.cn/info/1046/2147.htm) <sup>✉</sup>
-## ICLR 2025 [Paper](https://openreview.net/pdf?id=c1RhJVTPwT) | [VRU Dataset](https://huggingface.co/datasets/BestWJH/VRU_Basketball/tree/main)
+## ICLR 2025 [Paper](https://arxiv.org/abs/2503.12307) | [VRU Dataset](https://huggingface.co/datasets/BestWJH/VRU_Basketball/tree/main)
 
 ![](./pictures/teaser.png)
 ![](./pictures/pipeline.png)
