@@ -305,100 +305,65 @@ class Neural3D_NDC_Dataset(Dataset):
         return render_poses, self.time_scale * render_times
     
 
-def calc_std(self, video_path_root, std_path_root, frame_start=0, n_frame=300):
-
-    os.makedirs(std_path_root, exist_ok=True)
-
-    # 获取已有 std 文件
-    std_files = sorted(glob.glob(os.path.join(std_path_root, "*.npy")))
-    std_dict = {
-        os.path.basename(f): f for f in std_files
-    }
-
-    self.std_frames = []
-
-    for video_path in video_path_root:
-
-        # 统一命名
-        std_name = os.path.basename(video_path) + '_std.npy'
-        std_path = os.path.join(std_path_root, std_name)
-
-        # =========================
-        # ✅ 情况1：已存在 → 直接加载
-        # =========================
-        if std_name in std_dict:
-            std_frame = np.load(std_dict[std_name])
-            std_tensor = torch.from_numpy(std_frame).float()
-            self.std_frames.append(std_tensor)
-            continue
-
-        # =========================
-        # ✅ 情况2：不存在 → 计算 + 保存
-        # =========================
-        images_path = video_path.split('.')[0]
-        frame_paths = sorted(glob.glob(os.path.join(images_path, "images", "*.png")))
-
-        if len(frame_paths) == 0:
-            raise RuntimeError(f"No frames found in {images_path}")
-
-        frames = []
-
-        for fp in frame_paths[frame_start:frame_start + n_frame]:
-            frame = Image.open(fp).convert('RGB')
-            frame = np.array(frame, dtype=np.float32) / 255.
-            frames.append(frame)
-
-        frames = np.stack(frames, axis=0)  # [T, H, W, 3]
-
-        # 计算 std
-        std_map = frames.std(axis=0).mean(axis=-1)  # [H, W]
-
-        # 高斯模糊
-        std_map_blur = cv2.GaussianBlur(std_map, (31, 31), 0).astype(np.float32)
-
-        # numpy
-        np.save(std_path, std_map_blur)
-
-        # tensor
-        std_tensor = torch.from_numpy(std_map_blur).float()
-        self.std_frames.append(std_tensor)
-
-    if len(self.std_frames) != len(video_path_root):
-        raise RuntimeError(
-            f"std_frames ({len(self.std_frames)}) != videos ({len(video_path_root)})"
-        )
+    def calc_std(self, video_path_root, std_path_root, frame_start=0, n_frame=300):
+        self.cameras = len(video_path_root)
+        os.makedirs(std_path_root, exist_ok=True)
         
+        self.std_frames = []
+        
+        for video_path in tqdm(video_path_root, desc="Calculating std"):
+            std_name = os.path.basename(video_path) + '_std.npy'
+            std_path = os.path.join(std_path_root, std_name)
+
+            # 1. 检查缓存
+            if os.path.exists(std_path):
+                std_map_blur = np.load(std_path)
+                self.std_frames.append(torch.from_numpy(std_map_blur).float())
+                continue
+
+            # 2. 初始化累加器 (在 CPU 或 GPU 上，建议先在 CPU 累加，最后算 std)
+            images_path = video_path.split('.')[0]
+            frame_paths = sorted(glob.glob(os.path.join(images_path, "images", "*.png")))
+            selected_paths = frame_paths[frame_start : frame_start + n_frame]
+            
+            if not selected_paths: continue
+
+            sum_x = None
+            sum_x2 = None
+            count = 0
+
+            # 3. 迭代计算（低显存模式）
+            for fp in selected_paths:
+                img = Image.open(fp).convert('RGB')
+                # 缩放或转换可在 CPU 完成以节省显存
+                t = TF.to_tensor(img) # [3, H, W]
+                
+                if sum_x is None:
+                    sum_x = torch.zeros_like(t)
+                    sum_x2 = torch.zeros_like(t)
+                
+                sum_x += t
+                sum_x2 += t ** 2
+                count += 1
+
+            # 4. 计算标准差: std = sqrt(E[X^2] - (E[X])^2)
+            mean = sum_x / count
+            var = (sum_x2 / count) - (mean ** 2)
+            # 这里的 clamp 是为了防止浮点误差导致微小的负数
+            std_map = torch.sqrt(torch.clamp(var, min=1e-6))
+            
+            # 5. 后处理 (Mean over RGB channels and Blur)
+            std_map_gray = std_map.mean(dim=0).numpy() # [H, W]
+            std_map_blur = cv2.GaussianBlur(std_map_gray, (31, 31), 0).astype(np.float32)
+
+            # 6. 保存与缓存
+            np.save(std_path, std_map_blur)
+            self.std_frames.append(torch.from_numpy(std_map_blur))
+
+            # 显式清理
+            del sum_x, sum_x2, std_map
     
-    # def calc_std(self, video_path_root, std_path_root, frame_start=0, n_frame=300):
 
-    #     if os.path.exists(std_path_root):
-    #         std_files = glob.glob(os.path.join(std_path_root, "*.npy"))
-    #         std_files = sorted(std_files)
-
-    #         for i, std_file in enumerate(std_files):
-    #             std_frame = np.load(std_file)
-    #             std_frame = torch.from_numpy(std_frame)
-    #             self.std_frames.append(std_frame)
-    #         return
-        
-    #     os.makedirs(std_path_root)
-    #     # print(video_path_root)
-
-    #     for i , video_path in enumerate(video_path_root):
-    #         images_path = video_path.split('.')[0]
-    #         frame_paths = glob.glob(os.path.join(os.path.join(images_path,"images"), "*.png"))
-    #         frames = []
-    #         for j , fp in enumerate(frame_paths):
-    #             frame = Image.open( fp ).convert('RGB')
-    #             frame = np.array(frame, dtype=np.float32) / 255.
-    #             frames.append(frame)
-    #         frame = np.stack(frames, axis=0)  # [300,h,w,3]
-    #         std_map = frame.std(axis=0).mean(axis=-1)  # [h,w]
-    #         std_map_blur = (cv2.GaussianBlur(std_map, (31, 31), 0)).astype(np.float32) # [1014,1352] 高斯模糊
-    #         std_path = os.path.join(std_path_root, os.path.basename(video_path)+'_std.npy')
-
-    #         self.std_frames.append(std_map_blur)
-    #         np.save(std_path, std_map_blur)
 
 
 
