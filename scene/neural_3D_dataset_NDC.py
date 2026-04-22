@@ -336,6 +336,7 @@ class Neural3D_NDC_Dataset(Dataset):
             for fp in selected_paths:
                 img = Image.open(fp).convert('RGB')
                 # 缩放或转换可在 CPU 完成以节省显存
+                img = img.resize(self.img_wh, Image.LANCZOS)
                 t = TF.to_tensor(img) # [3, H, W]
                 
                 if sum_x is None:
@@ -362,8 +363,6 @@ class Neural3D_NDC_Dataset(Dataset):
 
             # 显式清理
             del sum_x, sum_x2, std_map
-    
-
 
 
 
