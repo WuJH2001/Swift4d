@@ -315,13 +315,13 @@ class Neural3D_NDC_Dataset(Dataset):
             std_name = os.path.basename(video_path) + '_std.npy'
             std_path = os.path.join(std_path_root, std_name)
 
-            # 1. 检查缓存
+            # 1. check cache
             if os.path.exists(std_path):
                 std_map_blur = np.load(std_path)
                 self.std_frames.append(torch.from_numpy(std_map_blur).float())
                 continue
 
-            # 2. 初始化累加器 (在 CPU 或 GPU 上，建议先在 CPU 累加，最后算 std)
+            # 2. init
             images_path = video_path.split('.')[0]
             frame_paths = sorted(glob.glob(os.path.join(images_path, "images", "*.png")))
             selected_paths = frame_paths[frame_start : frame_start + n_frame]
@@ -332,10 +332,10 @@ class Neural3D_NDC_Dataset(Dataset):
             sum_x2 = None
             count = 0
 
-            # 3. 迭代计算（低显存模式）
+            # 3. loading and caculating
             for fp in selected_paths:
                 img = Image.open(fp).convert('RGB')
-                # 缩放或转换可在 CPU 完成以节省显存
+                
                 img = img.resize(self.img_wh, Image.LANCZOS)
                 t = TF.to_tensor(img) # [3, H, W]
                 
@@ -347,21 +347,21 @@ class Neural3D_NDC_Dataset(Dataset):
                 sum_x2 += t ** 2
                 count += 1
 
-            # 4. 计算标准差: std = sqrt(E[X^2] - (E[X])^2)
+            # 4.  std = sqrt(E[X^2] - (E[X])^2)
             mean = sum_x / count
             var = (sum_x2 / count) - (mean ** 2)
-            # 这里的 clamp 是为了防止浮点误差导致微小的负数
+            
             std_map = torch.sqrt(torch.clamp(var, min=1e-6))
             
-            # 5. 后处理 (Mean over RGB channels and Blur)
+            # 5. (Mean over RGB channels and Blur)
             std_map_gray = std_map.mean(dim=0).numpy() # [H, W]
             std_map_blur = cv2.GaussianBlur(std_map_gray, (31, 31), 0).astype(np.float32)
 
-            # 6. 保存与缓存
+            # 6. save
             np.save(std_path, std_map_blur)
             self.std_frames.append(torch.from_numpy(std_map_blur))
 
-            # 显式清理
+            # clean
             del sum_x, sum_x2, std_map
 
 
